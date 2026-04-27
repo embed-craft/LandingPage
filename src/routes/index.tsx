@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, type Variants } from "framer-motion";
 import {
@@ -31,6 +32,8 @@ import {
   MonitorPlay,
   Code2,
   Settings,
+  Sun,
+  Moon,
 } from "lucide-react";
 import bottomsheetGif from "@/assets/bottomsheet.gif";
 import storiesGif from "@/assets/stories.gif";
@@ -82,11 +85,44 @@ const staggerSlow: Variants = {
   show: { transition: { staggerChildren: 0.15 } },
 };
 
+function ThemeToggle() {
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") || "light";
+    }
+    return "light";
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  return (
+    <button
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur-xl transition-all hover:bg-secondary"
+      aria-label="Toggle theme"
+    >
+      {theme === "light" ? (
+        <Moon className="h-5 w-5 text-neutral-600 dark:text-neutral-400" />
+      ) : (
+        <Sun className="h-5 w-5 text-neutral-400" />
+      )}
+    </button>
+  );
+}
+
 function Logo() {
   return (
     <div className="flex items-center gap-3 group cursor-pointer">
       <div className="h-12 w-12 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-        <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain" />
+        <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain dark:invert" />
       </div>
       <span className="font-bold text-3xl tracking-tightest leading-none">EmbedCraft</span>
     </div>
@@ -97,7 +133,7 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-50 px-4 pt-4">
       <nav className="mx-auto max-w-6xl">
-        <div className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-background/70 px-4 py-2.5 backdrop-blur-xl">
+        <div className="flex items-center justify-between gap-4 rounded-2xl border-2 border-border bg-background/70 px-4 py-2.5 backdrop-blur-xl">
           <Logo />
           <div className="hidden md:flex items-center gap-1 rounded-full border border-border px-1.5 py-1.5">
             {[
@@ -118,6 +154,7 @@ function Navbar() {
             ))}
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <a
               className="hidden sm:inline-flex px-3 py-1.5 text-sm text-neutral-700 hover:text-foreground transition-colors"
               href="https://dashboard.embedcraft.com"
@@ -141,29 +178,20 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section className="relative px-4 pt-8 pb-12 sm:pt-12">
+    <section className="relative px-4 pt-4 pb-12 sm:pt-6">
       <motion.div
         initial="hidden"
         animate="show"
         variants={stagger}
         className="mx-auto max-w-5xl text-center"
       >
-        <motion.div variants={fadeUp} className="flex justify-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-neutral-700">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 animate-ping" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            </span>
-            Now Live — Native In-App Experiences
-          </span>
-        </motion.div>
 
         <motion.div
           variants={fadeUp}
           className="mt-6 flex flex-col items-center mb-16"
         >
           <div className="h-48 w-48 flex items-center justify-center animate-float mb-8">
-            <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain" />
+            <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain dark:invert" />
           </div>
           <div className="font-bold text-5xl tracking-tightest mb-6 text-foreground">EmbedCraft</div>
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tightest leading-[1.1] text-foreground">
@@ -203,7 +231,7 @@ function Hero() {
         transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         className="mx-auto mt-16 max-w-6xl"
       >
-        <div className="relative rounded-3xl border border-border bg-secondary/40 p-3 sm:p-5">
+        <div className="relative rounded-3xl border-2 border-border bg-secondary/40 p-3 sm:p-5">
           <div className="relative overflow-hidden rounded-2xl border border-border bg-background bg-grid">
             <DashboardMockup />
           </div>

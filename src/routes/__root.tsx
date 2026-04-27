@@ -29,7 +29,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "EmbedCraft — Bypass the App Store. Inject UI in Real-Time." },
+      { title: "EmbedCraft" },
       { name: "description", content: "The 100% native Flutter SDK to deploy stories, nudges, and banners with 145ms latency. Zero app updates required." },
       { name: "author", content: "EmbedCraft" },
       { property: "og:title", content: "EmbedCraft — Flutter SDK for OTA UI Injection" },
@@ -39,6 +39,7 @@ export const Route = createRootRoute({
       { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "icon", href: "/favicon.png" },
       {
         rel: "stylesheet",
         href: appCss,

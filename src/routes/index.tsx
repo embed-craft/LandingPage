@@ -17,12 +17,31 @@ import {
   Smartphone,
   Bell,
   Image as ImageIcon,
-  Linkedin,
-  Twitter,
-  Github,
+  Target,
+  BarChart3,
+  Gamepad2,
+  Gift,
+  LayoutDashboard,
+  Megaphone,
+  GitBranch,
+  Users,
+  FileText,
+  Palette,
+  Trophy,
+  MonitorPlay,
+  Code2,
+  Settings,
 } from "lucide-react";
 import bottomsheetGif from "@/assets/bottomsheet.gif";
 import storiesGif from "@/assets/stories.gif";
+import embedCraftLogo from "@/assets/logo.png";
+import onboardingImg from "@/assets/onboarding.avif";
+import adoptionImg from "@/assets/adoption.avif";
+import conversionImg from "@/assets/conversion.avif";
+import gamificationImg from "@/assets/gamification.avif";
+import gdprBadge from "@/assets/gdpr-badge.svg";
+import soc2Badge from "@/assets/soc2-badge.png";
+import isoBadge from "@/assets/iso-badge.png";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -38,15 +57,36 @@ const stagger: Variants = {
   show: { transition: { staggerChildren: 0.08 } },
 };
 
+const slideInLeft: Variants = {
+  hidden: { opacity: 0, x: -60 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
+const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 60 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
+const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.85 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
+const countUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
+const staggerSlow: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.15 } },
+};
+
 function Logo() {
   return (
-    <div className="flex items-center gap-2">
-      <div className="relative h-7 w-7 rounded-md bg-foreground flex items-center justify-center">
-        <Square className="h-3.5 w-3.5 text-background" strokeWidth={2} fill="currentColor" />
-      </div>
-      <span className="text-[17px] font-semibold tracking-tight text-foreground">
-        EmbedCraft
-      </span>
+    <div className="flex items-center gap-4 group cursor-pointer">
+      <img src={embedCraftLogo} alt="EmbedCraft" className="h-12 w-auto transition-transform duration-300 group-hover:scale-105" />
+      <span className="font-bold text-3xl tracking-tightest leading-none">EmbedCraft</span>
     </div>
   );
 }
@@ -112,33 +152,37 @@ function Hero() {
               <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 animate-ping" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
             </span>
-            V2.0 is Live: FloaterRenderV2
+            Now Live — Native In-App Experiences
           </span>
         </motion.div>
 
-        <motion.h1
+        <motion.div
           variants={fadeUp}
-          className="mt-6 text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tighter text-foreground leading-[0.95]"
+          className="mt-12 flex flex-col items-center mb-16"
         >
-          Bypass the App Store.
-          <br />
-          <span className="text-neutral-400">Inject UI in Real-Time.</span>
-        </motion.h1>
+          <img src={embedCraftLogo} alt="EmbedCraft" className="h-48 w-auto drop-shadow-2xl animate-float mb-6" />
+          <div className="font-bold text-4xl tracking-tightest mb-4">EmbedCraft</div>
+          <h1 className="text-7xl sm:text-8xl md:text-9xl font-bold tracking-tightest leading-[0.8] text-foreground">
+            Tailored app<br />
+            <span className="text-neutral-400">experiences</span><br />
+            in minutes.
+          </h1>
+        </motion.div>
 
         <motion.p
           variants={fadeUp}
           className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-neutral-600 leading-relaxed"
         >
-          The 100% native Flutter SDK that lets you deploy stories, nudges, and banners
-          with 145ms latency. Zero app updates required.
+          Launch nudges, stories, gamification, and rich in-app widgets directly inside
+          your Flutter app. No code changes. No app store reviews. 145ms latency.
         </motion.p>
 
         <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <a
-            href="#cta"
+            href="#contact"
             className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background hover:bg-neutral-800 transition-colors"
           >
-            Start Building <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
+            Get a Demo <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
           </a>
           <a
             href="https://docs.embedcraft.com/"
@@ -183,9 +227,8 @@ function DashboardMockup() {
             {["Campaigns", "Stories", "Nudges", "Audiences", "Analytics"].map((s, i) => (
               <div
                 key={s}
-                className={`rounded-lg px-3 py-2 text-xs ${
-                  i === 1 ? "bg-foreground text-background" : "text-neutral-600 hover:bg-secondary"
-                }`}
+                className={`rounded-lg px-3 py-2 text-xs ${i === 1 ? "bg-foreground text-background" : "text-neutral-600 hover:bg-secondary"
+                  }`}
               >
                 {s}
               </div>
@@ -245,25 +288,7 @@ function DashboardMockup() {
   );
 }
 
-function SocialProof() {
-  const logos = ["Northwind", "Acme", "Lumen", "Quantic", "Helix", "Vertex"];
-  return (
-    <section className="border-y border-border bg-background py-12">
-      <div className="mx-auto max-w-6xl px-4">
-        <p className="text-center text-sm text-neutral-500">
-          Trusted by forward-thinking consumer apps.
-        </p>
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-center">
-          {logos.map((l) => (
-            <div key={l} className="text-center text-lg font-semibold tracking-tight text-neutral-400 hover:text-neutral-700 transition-colors">
-              {l}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+
 
 function SectionHeader({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
   return (
@@ -296,9 +321,9 @@ function Bento() {
   return (
     <section id="features" className="px-4 py-24">
       <SectionHeader
-        eyebrow="Platform"
+        eyebrow="In-App Experiences"
         title="Everything you need. Nothing you don't."
-        sub="A composable runtime for shipping native UI without shipping binaries."
+        sub="The highest-converting surface in your product, fully owned by your growth team."
       />
 
       <motion.div
@@ -376,11 +401,10 @@ function Bento() {
             {Array.from({ length: 36 }).map((_, i) => (
               <div
                 key={i}
-                className={`aspect-square rounded-sm ${
-                  [3, 7, 9, 14, 18, 22, 25, 29, 31].includes(i)
+                className={`aspect-square rounded-sm ${[3, 7, 9, 14, 18, 22, 25, 29, 31].includes(i)
                     ? "bg-foreground"
                     : "bg-neutral-200"
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -397,10 +421,10 @@ function Bento() {
             NO-CODE AUTONOMY
           </div>
           <h3 className="mt-4 text-2xl font-semibold tracking-tight">
-            Marketers ship. Engineers sleep.
+            Your growth team ships. No dev cycles.
           </h3>
           <p className="mt-2 text-sm text-neutral-600 max-w-md">
-            Drag, drop, target, schedule. A visual builder your growth team will actually use.
+            Drag, drop, target, schedule. A visual campaign builder that lets you create native experiences without writing code.
           </p>
 
           <div className="mt-8 rounded-xl border border-border bg-secondary/40 p-4 bg-grid">
@@ -502,18 +526,310 @@ function DevExperience() {
               <div className="ml-3 text-xs text-neutral-500 font-mono">main.dart</div>
             </div>
             <pre className="p-6 text-[13px] leading-relaxed font-mono overflow-x-auto">
-<span className="text-neutral-500">// 1. Import</span>{"\n"}
-<span className="text-neutral-300">import</span> <span className="text-neutral-100">'package:embedcraft/embedcraft.dart'</span><span className="text-neutral-500">;</span>{"\n\n"}
-<span className="text-neutral-500">// 2. Initialize</span>{"\n"}
-<span className="text-neutral-300">await</span> <span className="text-white">EmbedCraft</span><span className="text-neutral-500">.</span><span className="text-neutral-200">initialize</span><span className="text-neutral-500">(</span>{"\n"}
-{"  "}<span className="text-neutral-400">apiKey</span><span className="text-neutral-500">:</span> <span className="text-neutral-100">"YOUR_KEY"</span><span className="text-neutral-500">,</span>{"\n"}
-<span className="text-neutral-500">);</span>{"\n\n"}
-<span className="text-neutral-500">// 3. Attach</span>{"\n"}
-<span className="text-white">EmbedCraft</span><span className="text-neutral-500">.</span><span className="text-neutral-200">attachToRouter</span><span className="text-neutral-500">(</span><span className="text-neutral-300">navigatorKey</span><span className="text-neutral-500">);</span>
+              <span className="text-neutral-500">// 1. Import</span>{"\n"}
+              <span className="text-neutral-300">import</span> <span className="text-neutral-100">'package:embedcraft/embedcraft.dart'</span><span className="text-neutral-500">;</span>{"\n\n"}
+              <span className="text-neutral-500">// 2. Initialize</span>{"\n"}
+              <span className="text-neutral-300">await</span> <span className="text-white">EmbedCraft</span><span className="text-neutral-500">.</span><span className="text-neutral-200">initialize</span><span className="text-neutral-500">(</span>{"\n"}
+              {"  "}<span className="text-neutral-400">apiKey</span><span className="text-neutral-500">:</span> <span className="text-neutral-100">"YOUR_KEY"</span><span className="text-neutral-500">,</span>{"\n"}
+              <span className="text-neutral-500">);</span>{"\n\n"}
+              <span className="text-neutral-500">// 3. Attach</span>{"\n"}
+              <span className="text-white">EmbedCraft</span><span className="text-neutral-500">.</span><span className="text-neutral-200">attachToRouter</span><span className="text-neutral-500">(</span><span className="text-neutral-300">navigatorKey</span><span className="text-neutral-500">);</span>
             </pre>
           </motion.div>
         </div>
       </div>
+    </section>
+  );
+}
+
+function FeatureRow({ icon: Icon, eyebrow, title, desc, bullets, index }: {
+  icon: React.ElementType; eyebrow: string; title: string; desc: string; bullets: string[]; index: number;
+}) {
+  const isEven = index % 2 === 0;
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-60px" }}
+      variants={staggerSlow}
+      className={`grid lg:grid-cols-2 gap-8 lg:gap-14 items-center ${isEven ? "" : "lg:direction-rtl"}`}
+    >
+      <motion.div variants={isEven ? slideInLeft : slideInRight} className={`${isEven ? "" : "lg:order-2"}`}>
+        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium text-neutral-500 uppercase tracking-[0.15em] mb-4">
+          <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
+          {eyebrow}
+        </div>
+        <h3 className="text-3xl sm:text-4xl font-semibold tracking-tighter text-foreground">{title}</h3>
+        <p className="mt-4 text-neutral-600 leading-relaxed max-w-lg">{desc}</p>
+        <ul className="mt-6 space-y-3">
+          {bullets.map((b) => (
+            <li key={b} className="flex items-start gap-3 text-sm text-neutral-600">
+              <div className="mt-1 h-5 w-5 rounded-full bg-foreground/5 flex items-center justify-center flex-shrink-0">
+                <Zap className="h-3 w-3 text-foreground" strokeWidth={2} />
+              </div>
+              {b}
+            </li>
+          ))}
+        </ul>
+      </motion.div>
+
+      <motion.div variants={isEven ? slideInRight : slideInLeft} className={`${isEven ? "" : "lg:order-1"}`}>
+        <div className="relative rounded-2xl border border-border bg-card p-6 sm:p-8 card-hover overflow-hidden">
+          <div className="absolute top-0 left-0 w-1 h-full bg-foreground rounded-r-full" />
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-foreground text-background">
+              <Icon className="h-5 w-5" strokeWidth={1.75} />
+            </div>
+            <div className="text-lg font-semibold text-foreground">{eyebrow}</div>
+          </div>
+          <div className="space-y-3">
+            {bullets.map((b, i) => (
+              <motion.div
+                key={b}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 * i, duration: 0.5 }}
+                className="flex items-center gap-3 rounded-lg border border-border/50 bg-secondary px-4 py-3 hover:bg-foreground hover:text-background transition-all duration-300"
+              >
+                <div className="h-1.5 w-1.5 rounded-full flex-shrink-0 bg-current" />
+                <span className="text-sm">{b}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function PlatformDeepDive() {
+  const features = [
+    {
+      icon: Megaphone,
+      eyebrow: "Campaign Builder",
+      title: "Build campaigns visually. Ship without code.",
+      desc: "A drag-and-drop visual editor that lets your growth team design, target, and schedule native in-app experiences — bottom sheets, modals, banners, and more — without a single line of code.",
+      bullets: [
+        "Visual drag-and-drop campaign editor with live preview",
+        "Schedule campaigns with start/end dates and time zones",
+        "Target by segment, screen, event, or user property",
+        "A/B test multiple variants with auto-winner selection",
+        "Campaign templates for instant launch",
+      ],
+    },
+    {
+      icon: Target,
+      eyebrow: "Audience Segments",
+      title: "Reach the right users at the right moment.",
+      desc: "Create dynamic audience segments based on user properties, behavioral events, and real-time conditions. No SQL, no data team needed.",
+      bullets: [
+        "Build segments with AND/OR rule combinators",
+        "Filter by user properties, events, and session data",
+        "Real-time segment evaluation on the device",
+        "Pre-built segment templates for common patterns",
+        "Export and sync segments across campaigns",
+      ],
+    },
+    {
+      icon: GitBranch,
+      eyebrow: "User Flows",
+      title: "Orchestrate multi-step journeys.",
+      desc: "Design branching user flows that guide users through onboarding, feature discovery, and conversion funnels with conditional logic and delay steps.",
+      bullets: [
+        "Visual flow builder with drag-and-drop nodes",
+        "Branch on events, properties, or time delays",
+        "Trigger nudges, emails, or webhooks at each step",
+        "Measure funnel conversion at every stage",
+        "Clone and iterate flows without starting from scratch",
+      ],
+    },
+    {
+      icon: Gamepad2,
+      eyebrow: "Gamification Engine",
+      title: "Turn engagement into a game worth playing.",
+      desc: "Scratch cards, spin-the-wheel, streaks, milestone challenges, and quiz modules that drive habit formation and reward-based retention loops.",
+      bullets: [
+        "Spin the wheel with configurable segments and odds",
+        "Scratch cards with custom reveal animations",
+        "Daily streaks with milestone reward tiers",
+        "Challenge campaigns with leaderboard rankings",
+        "Quiz modules with instant reward distribution",
+      ],
+    },
+    {
+      icon: BarChart3,
+      eyebrow: "Real-Time Analytics",
+      title: "Measure everything. Guess nothing.",
+      desc: "Live dashboards with impressions, clicks, conversions, and revenue attribution tied directly to each campaign. Know what's working in real time.",
+      bullets: [
+        "Real-time impression and click tracking",
+        "Funnel analysis with step-by-step drop-off",
+        "Campaign comparison with side-by-side metrics",
+        "Revenue attribution per campaign and variant",
+        "Custom date ranges and exportable reports",
+      ],
+    },
+    {
+      icon: Bell,
+      eyebrow: "Event Tracking",
+      title: "Capture every signal. Miss nothing.",
+      desc: "Track screen views, button taps, form submissions, and custom events with a lightweight SDK. Use events to trigger campaigns and build segments.",
+      bullets: [
+        "Auto-track screen views and navigation events",
+        "Custom event logging with typed properties",
+        "Event timeline per user with full history",
+        "Use events as campaign triggers in real-time",
+        "Debug console for live event inspection",
+      ],
+    },
+    {
+      icon: Trophy,
+      eyebrow: "Rewards & Coupons",
+      title: "Incentivize action with real rewards.",
+      desc: "Configure reward tiers, generate unique coupon codes, and distribute them through gamification modules. Track redemption rates and manage inventory.",
+      bullets: [
+        "Auto-generate unique coupon codes at scale",
+        "Reward tiers with configurable win probabilities",
+        "Track coupon claims and redemption rates",
+        "Integrate rewards with scratch cards and spin wheel",
+        "Expiry management and inventory controls",
+      ],
+    },
+    {
+      icon: Palette,
+      eyebrow: "Asset Library",
+      title: "All your creative assets in one place.",
+      desc: "Upload, organize, and reuse images, icons, and media files across campaigns. Centralized asset management that keeps your team moving fast.",
+      bullets: [
+        "Drag-and-drop upload with auto-optimization",
+        "Organize assets with folders and tags",
+        "Search and filter across all uploaded media",
+        "CDN-powered delivery for instant load times",
+        "Reuse assets across multiple campaigns",
+      ],
+    },
+    {
+      icon: MonitorPlay,
+      eyebrow: "Page Builder",
+      title: "Create landing pages inside your app.",
+      desc: "Build rich in-app pages with a visual editor — webviews, deep links, and custom content that lives inside your app without app store updates.",
+      bullets: [
+        "WYSIWYG editor for in-app landing pages",
+        "Embed videos, images, and interactive elements",
+        "Deep link to any screen in your app",
+        "Track page views and engagement metrics",
+        "Version control with publish/draft states",
+      ],
+    },
+    {
+      icon: Code2,
+      eyebrow: "API & Developer SDK",
+      title: "Built for developers. Loved by product teams.",
+      desc: "A clean REST API and lightweight Flutter SDK with offline-first architecture, delta sync, and comprehensive documentation for rapid integration.",
+      bullets: [
+        "Flutter SDK with 3-line initialization",
+        "REST API with full CRUD for all entities",
+        "Offline-first with SQLite persistence",
+        "Webhook callbacks for real-time event forwarding",
+        "Comprehensive API docs with code examples",
+      ],
+    },
+  ];
+
+  return (
+    <section className="px-4 py-24">
+      <SectionHeader
+        eyebrow="Platform Deep Dive"
+        title="10 powerful modules. One unified platform."
+        sub="Every tool your growth team needs to create, target, gamify, and measure native in-app experiences."
+      />
+      <div className="mx-auto mt-16 max-w-6xl space-y-20">
+        {features.map((f, i) => (
+          <FeatureRow key={f.eyebrow} {...f} index={i} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function UseCases() {
+  const cases = [
+    { label: "Onboarding & Activation", img: onboardingImg, desc: "Get users to their first value moment, fast, with guided tours, spotlights, and checklists that turn sign-ups into activated users." },
+    { label: "Cross-Sell & Upsell", img: adoptionImg, desc: "Surface the right product to the right user at the right moment. In the app, not in an email they'll ignore." },
+    { label: "Conversion & Monetization", img: conversionImg, desc: "Remove friction at every paywall and decision point. Contextual nudges that convert hesitation into action." },
+    { label: "Gamification & Retention", img: gamificationImg, desc: "Make your app worth coming back to. Streaks, rewards, and challenges that turn casual users into daily actives." },
+  ];
+  return (
+    <section className="px-4 py-24 bg-secondary/30 border-y border-border">
+      <SectionHeader
+        eyebrow="Use Cases"
+        title="From first open to loyal power user."
+        sub="Built for every stage of the user lifecycle."
+      />
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-80px" }}
+        variants={stagger}
+        className="mx-auto mt-14 grid max-w-6xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
+        {cases.map((c) => (
+          <motion.div
+            key={c.label}
+            variants={fadeUp}
+            className="group rounded-2xl border border-border bg-card p-4 card-hover overflow-hidden"
+          >
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-secondary/60">
+              <img src={c.img} alt={c.label} className="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div className="px-1 pt-3 pb-1">
+              <div className="text-sm font-medium text-foreground">{c.label}</div>
+              <p className="mt-1.5 text-xs text-neutral-500 leading-relaxed">{c.desc}</p>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    </section>
+  );
+}
+
+function TrustStats() {
+  const stats = [
+    { value: "145ms", label: "P99 latency" },
+    { value: "99.9%", label: "Platform uptime" },
+    { value: "10K+", label: "Experiences created" },
+    { value: "24/7", label: "Support coverage" },
+  ];
+  return (
+    <section className="px-4 py-24">
+      <SectionHeader
+        eyebrow="Trust & Security"
+        title="Enterprise-grade from day one."
+      />
+      <div className="mx-auto mt-10 max-w-3xl flex items-center justify-center gap-8 sm:gap-12">
+        <img src={gdprBadge} alt="GDPR Compliant" className="h-12 sm:h-16 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+        <img src={soc2Badge} alt="SOC 2 Certified" className="h-12 sm:h-16 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+        <img src={isoBadge} alt="ISO 27001 Certified" className="h-12 sm:h-16 w-auto opacity-70 hover:opacity-100 transition-opacity" />
+      </div>
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-80px" }}
+        variants={stagger}
+        className="mx-auto mt-14 max-w-5xl grid grid-cols-2 md:grid-cols-4 gap-4"
+      >
+        {stats.map((s) => (
+          <motion.div
+            key={s.label}
+            variants={fadeUp}
+            className="rounded-2xl border border-border bg-card p-6 text-center card-hover"
+          >
+            <div className="text-4xl font-semibold tracking-tighter text-foreground">{s.value}</div>
+            <div className="mt-2 text-sm text-neutral-500">{s.label}</div>
+          </motion.div>
+        ))}
+      </motion.div>
     </section>
   );
 }
@@ -531,17 +847,17 @@ function FinalCTA() {
         <div className="absolute inset-0 bg-grid-dark opacity-30 pointer-events-none" />
         <div className="relative">
           <h2 className="text-4xl sm:text-6xl font-semibold tracking-tighter">
-            Ready to make your<br />Flutter app dynamic?
+            Ready to launch native<br />in-app experiences?
           </h2>
           <p className="mt-5 text-neutral-400 max-w-lg mx-auto">
-            Join the next generation of consumer apps shipping UI without shipping binaries.
+            Ship nudges, stories, gamification, and widgets — without waiting for app store reviews.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <a href="#" className="inline-flex items-center gap-2 rounded-full bg-background px-6 py-3 text-sm font-medium text-foreground hover:bg-neutral-200 transition-colors">
-              Get your API Key <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
+            <a href="#contact" className="inline-flex items-center gap-2 rounded-full bg-background px-6 py-3 text-sm font-medium text-foreground hover:bg-neutral-200 transition-colors">
+              Get a Demo <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
             </a>
-            <a href="#" className="inline-flex items-center gap-2 rounded-full border border-neutral-700 px-6 py-3 text-sm font-medium text-background hover:bg-neutral-900 transition-colors">
-              Talk to Sales
+            <a href="https://docs.embedcraft.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-neutral-700 px-6 py-3 text-sm font-medium text-background hover:bg-neutral-900 transition-colors">
+              Read the Docs
             </a>
           </div>
         </div>
@@ -562,7 +878,7 @@ function Showcase() {
       <SectionHeader
         eyebrow="Showcase"
         title="Every surface, fully native."
-        sub="Bottom sheets, modals, PiP, scratch cards, stories, banners, and more — powered by the in_app_ninja runtime."
+        sub="Bottom sheets, modals, scratch cards, stories, banners, and more — rendered as real Flutter widgets."
       />
       <motion.div
         initial="hidden"
@@ -607,20 +923,21 @@ function Showcase() {
 
 function Capabilities() {
   const caps = [
-    { t: "Bottom Sheets & Modals", d: "Configurable height, drag-to-dismiss, blur backdrops." },
-    { t: "PiP Widgets", d: "Persistent floating widgets that survive route changes." },
-    { t: "Scratch Cards", d: "Gamified rewards with native Scratcher rendering." },
-    { t: "Stories", d: "Tap-to-skip, progress bars, video & image segments." },
-    { t: "In-line Banners", d: "Visibility-detected impressions with auto-rotation." },
-    { t: "Local Persistence", d: "SQLite + SharedPreferences for offline campaigns." },
-    { t: "Targeting & Triggers", d: "Audience rules, screen events, and time-based triggers." },
+    { t: "Campaign Builder", d: "Visual drag-and-drop editor for creating native in-app experiences." },
+    { t: "Gamification", d: "Scratch cards, spin-the-wheel, streaks, and milestone rewards." },
+    { t: "Audience Segments", d: "Target users by behavior, properties, events, and custom rules." },
+    { t: "Event Tracking", d: "Track screen views, taps, and custom events with real-time analytics." },
+    { t: "Stories & Nudges", d: "Full-screen stories and contextual nudges with deep-link actions." },
+    { t: "A/B Experimentation", d: "Test variants, measure impact, and auto-deploy winners." },
+    { t: "Rewards Engine", d: "Configure reward tiers, coupons, and gamified incentive flows." },
+    { t: "Offline-First SDK", d: "SQLite sync with delta updates. Works without connectivity." },
   ];
   return (
     <section className="px-4 py-24">
       <SectionHeader
         eyebrow="Capabilities"
         title="A complete engagement runtime."
-        sub="Built on battle-tested Flutter primitives — http, sqflite, rxdart, visibility_detector, video_player and more."
+        sub="Everything from campaign creation to analytics, built for Flutter apps."
       />
       <div className="mx-auto mt-12 max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-3">
         {caps.map((c) => (
@@ -635,45 +952,7 @@ function Capabilities() {
   );
 }
 
-function Founders() {
-  const team = [
-    { name: "Nitin Sharma", role: "Founder & CEO", initials: "NS" },
-    { name: "Aaryan Upadhyay", role: "Co-founder & CTO", initials: "AU" },
-  ];
-  return (
-    <section className="px-4 py-24">
-      <SectionHeader
-        eyebrow="Team"
-        title="Built by shipping engineers."
-        sub="The minds behind EmbedCraft, on a mission to free product teams from the app store release cycle."
-      />
-      <div className="mx-auto mt-12 max-w-3xl grid sm:grid-cols-2 gap-4">
-        {team.map((p) => (
-          <div key={p.name} className="rounded-2xl border border-border bg-card p-6 card-hover flex items-center gap-4">
-            <div className="h-14 w-14 rounded-full bg-foreground text-background flex items-center justify-center text-base font-semibold tracking-tight">
-              {p.initials}
-            </div>
-            <div className="flex-1">
-              <div className="font-medium text-foreground">{p.name}</div>
-              <div className="text-sm text-neutral-500">{p.role}</div>
-            </div>
-            <div className="flex gap-1.5 text-neutral-400">
-              <a href="#" aria-label="LinkedIn" className="p-1.5 rounded-md hover:bg-secondary hover:text-foreground transition-colors">
-                <Linkedin className="h-4 w-4" strokeWidth={1.5} />
-              </a>
-              <a href="#" aria-label="Twitter" className="p-1.5 rounded-md hover:bg-secondary hover:text-foreground transition-colors">
-                <Twitter className="h-4 w-4" strokeWidth={1.5} />
-              </a>
-              <a href="#" aria-label="GitHub" className="p-1.5 rounded-md hover:bg-secondary hover:text-foreground transition-colors">
-                <Github className="h-4 w-4" strokeWidth={1.5} />
-              </a>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+
 
 function Contact() {
   return (
@@ -799,12 +1078,9 @@ function Footer() {
             <a href="https://docs.embedcraft.com/" target="_blank" rel="noreferrer" className="hover:text-foreground">Docs</a>
             <a href="mailto:contactembedcraft@gmail.com" className="hover:text-foreground">Contact</a>
           </div>
-          <div className="text-xs text-neutral-500">© 2026 EmbedCraft, Inc.</div>
         </div>
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-neutral-500">
-          <div>
-            Founded by <span className="text-foreground font-medium">Nitin Sharma</span> · Co-founded by <span className="text-foreground font-medium">Aaryan Upadhyay</span>
-          </div>
+          <div>© 2026 EmbedCraft, Inc. All rights reserved.</div>
           <a href="mailto:contactembedcraft@gmail.com" className="inline-flex items-center gap-1.5 hover:text-foreground">
             <Mail className="h-3.5 w-3.5" strokeWidth={1.5} />
             <span>contactembedcraft@gmail.com</span>
@@ -815,17 +1091,96 @@ function Footer() {
   );
 }
 
+function TechEdge() {
+  const specs = [
+    { title: "Offline-First", desc: "Local SQLite + SharedPreferences persistence. Campaigns work even without a connection." },
+    { title: "Delta Sync", desc: "Only fetch what changed. Minimal payload sizes and lightning-fast updates." },
+    { title: "Native Rendering", desc: "Zero webviews. Campaigns are rendered as 100% native Flutter widgets." },
+    { title: "Ultra-Low Latency", desc: "Average 145ms from event trigger to UI reveal. Built for high-frequency apps." },
+  ];
+  return (
+    <section className="px-4 py-24 bg-foreground text-background">
+      <div className="mx-auto max-w-6xl">
+        <div className="text-xs uppercase tracking-[0.3em] opacity-50 font-semibold mb-3">The Technical Edge</div>
+        <h2 className="text-5xl sm:text-7xl font-bold tracking-tightest leading-none">Built for the<br/>modern stack.</h2>
+        <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
+          {specs.map((s, i) => (
+            <motion.div
+              key={s.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-xl font-bold mb-4">{s.title}</div>
+              <p className="text-background/60 leading-relaxed text-sm">{s.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Pricing() {
+  return (
+    <section id="pricing" className="px-4 py-32 border-t border-border">
+      <SectionHeader
+        eyebrow="Pricing"
+        title="Coming Soon"
+        sub="Choose the plan that fits your growth stage."
+      />
+      <div className="mx-auto mt-16 max-w-lg">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="rounded-3xl border-2 border-foreground bg-foreground p-12 text-center text-background relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 px-4 py-1 bg-white text-black text-xs font-bold uppercase tracking-widest rounded-bl-xl">
+            Coming Soon
+          </div>
+          <h3 className="text-3xl font-bold">Early Access</h3>
+          <p className="mt-4 text-background/60">We're currently in private beta, working with a handful of high-growth apps.</p>
+          <div className="mt-8 text-6xl font-bold tracking-tighter">$0</div>
+          <p className="text-sm opacity-50 uppercase tracking-widest mt-2">During Beta Phase</p>
+          <ul className="mt-10 space-y-4 text-left max-w-xs mx-auto">
+            <li className="flex items-center gap-3">
+              <Zap className="h-4 w-4" />
+              <span>Unlimited Campaigns</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <Zap className="h-4 w-4" />
+              <span>Full Analytics Suite</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <Zap className="h-4 w-4" />
+              <span>Enterprise Support</span>
+            </li>
+          </ul>
+          <a href="#contact" className="mt-12 block w-full rounded-xl bg-background py-4 text-sm font-bold text-foreground hover:bg-neutral-200 transition-colors">
+            Get Early Access
+          </a>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function Landing() {
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
       <Hero />
-      <SocialProof />
       <Bento />
+      <PlatformDeepDive />
       <Showcase />
+      <UseCases />
+      <TechEdge />
       <Capabilities />
+      <Pricing />
+      <TrustStats />
       <DevExperience />
-      <Founders />
       <Contact />
       <FinalCTA />
       <Footer />

@@ -141,7 +141,7 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section className="relative px-4 pt-16 pb-12 sm:pt-24">
+    <section className="relative px-4 pt-8 pb-12 sm:pt-12">
       <motion.div
         initial="hidden"
         animate="show"
@@ -160,7 +160,7 @@ function Hero() {
 
         <motion.div
           variants={fadeUp}
-          className="mt-12 flex flex-col items-center mb-16"
+          className="mt-6 flex flex-col items-center mb-16"
         >
           <div className="h-48 w-48 flex items-center justify-center animate-float mb-8">
             <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain" />

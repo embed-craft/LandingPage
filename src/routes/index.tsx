@@ -85,7 +85,7 @@ const staggerSlow: Variants = {
 function Logo() {
   return (
     <div className="flex items-center gap-3 group cursor-pointer">
-      <div className="h-12 w-12 flex items-center justify-center bg-white rounded-xl shadow-sm border border-black/5 p-1.5 transition-transform duration-300 group-hover:scale-105">
+      <div className="h-12 w-12 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
         <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain" />
       </div>
       <span className="font-bold text-3xl tracking-tightest leading-none">EmbedCraft</span>
@@ -162,14 +162,12 @@ function Hero() {
           variants={fadeUp}
           className="mt-12 flex flex-col items-center mb-16"
         >
-          <div className="h-48 w-48 bg-white rounded-[2.5rem] shadow-2xl border border-black/5 p-8 flex items-center justify-center animate-float mb-8">
+          <div className="h-48 w-48 flex items-center justify-center animate-float mb-8">
             <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain" />
           </div>
           <div className="font-bold text-5xl tracking-tightest mb-6 text-foreground">EmbedCraft</div>
-          <h1 className="text-7xl sm:text-8xl md:text-9xl font-bold tracking-tightest leading-[0.8] text-foreground">
-            Tailored app<br />
-            <span className="text-neutral-400">experiences</span><br />
-            in minutes.
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tightest leading-[1.1] text-foreground">
+            Tailored app <span className="text-neutral-400">experiences</span> in minutes.
           </h1>
         </motion.div>
 

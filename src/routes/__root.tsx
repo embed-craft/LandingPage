@@ -30,6 +30,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "EmbedCraft" },
+      { name: "theme-color", content: "#ffffff" },
       { name: "description", content: "The 100% native Flutter SDK to deploy stories, nudges, and banners with 145ms latency. Zero app updates required." },
       { name: "author", content: "EmbedCraft" },
       { property: "og:title", content: "EmbedCraft — Flutter SDK for OTA UI Injection" },

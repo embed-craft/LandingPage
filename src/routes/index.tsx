@@ -84,8 +84,10 @@ const staggerSlow: Variants = {
 
 function Logo() {
   return (
-    <div className="flex items-center gap-4 group cursor-pointer">
-      <img src={embedCraftLogo} alt="EmbedCraft" className="h-12 w-auto transition-transform duration-300 group-hover:scale-105" />
+    <div className="flex items-center gap-3 group cursor-pointer">
+      <div className="h-12 w-12 flex items-center justify-center bg-white rounded-xl shadow-sm border border-black/5 p-1.5 transition-transform duration-300 group-hover:scale-105">
+        <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain" />
+      </div>
       <span className="font-bold text-3xl tracking-tightest leading-none">EmbedCraft</span>
     </div>
   );
@@ -160,8 +162,10 @@ function Hero() {
           variants={fadeUp}
           className="mt-12 flex flex-col items-center mb-16"
         >
-          <img src={embedCraftLogo} alt="EmbedCraft" className="h-48 w-auto drop-shadow-2xl animate-float mb-6" />
-          <div className="font-bold text-4xl tracking-tightest mb-4">EmbedCraft</div>
+          <div className="h-48 w-48 bg-white rounded-[2.5rem] shadow-2xl border border-black/5 p-8 flex items-center justify-center animate-float mb-8">
+            <img src={embedCraftLogo} alt="EmbedCraft" className="h-full w-full object-contain" />
+          </div>
+          <div className="font-bold text-5xl tracking-tightest mb-6 text-foreground">EmbedCraft</div>
           <h1 className="text-7xl sm:text-8xl md:text-9xl font-bold tracking-tightest leading-[0.8] text-foreground">
             Tailored app<br />
             <span className="text-neutral-400">experiences</span><br />

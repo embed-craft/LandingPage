@@ -1153,45 +1153,138 @@ function TechEdge() {
 }
 
 function Pricing() {
+  const tiers = [
+    {
+      name: "Starter",
+      desc: "Best for apps just getting started with in-app engagement.",
+      price: "$849",
+      priceSub: "/ month",
+      action: "Get Started",
+      actionType: "outline",
+      featuresLabel: "INCLUDES",
+      features: [
+        "Drag-and-drop templates — tooltips, nudges, surveys",
+        "Segmentation and targeting",
+        "Impact measurement",
+        "Sync cohorts from Amplitude, Mixpanel, etc",
+        "Email support",
+      ],
+    },
+    {
+      name: "Growth",
+      popular: true,
+      desc: "Best for fast-growing consumer brands looking to maximize engagement.",
+      price: "$2,149",
+      priceSub: "/ month",
+      action: "Talk to Us",
+      actionType: "solid",
+      featuresLabel: "EVERYTHING IN STARTER, PLUS",
+      features: [
+        "Stories, videos, PiP, and native widgets",
+        "Advanced targeting capabilities",
+        "A/B/n testing",
+        "30-day onboarding program",
+      ],
+    },
+    {
+      name: "Enterprise",
+      desc: "Enterprise contracts are annual and can have more flexible terms.",
+      price: "Custom",
+      priceSub: "AMU based and impression based billing.",
+      action: "Talk to Us",
+      actionType: "outline",
+      featuresLabel: "EVERYTHING IN GROWTH, PLUS",
+      features: [
+        "Gamification — streaks, quizzes, skill-based games, rewards",
+        "Off-app channels — push, email, WhatsApp, SMS, voice (custom pricing)",
+        "Journey builder to connect campaigns",
+        "Security certificates on request",
+        "Account roles and permissions",
+        "Dedicated support and customer success",
+        "Access to activity logs for security audits",
+      ],
+    },
+  ];
+
   return (
-    <section id="pricing" className="px-4 py-32 border-t border-border">
+    <section id="pricing" className="px-4 py-32 border-t border-border bg-background">
       <SectionHeader
         eyebrow="Pricing"
-        title="Coming Soon"
+        title="Simple, predictable pricing."
         sub="Choose the plan that fits your growth stage."
       />
-      <div className="mx-auto mt-16 max-w-lg">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="rounded-3xl border-2 border-foreground bg-foreground p-12 text-center text-background relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 px-4 py-1 bg-white text-black text-xs font-bold uppercase tracking-widest rounded-bl-xl">
-            Coming Soon
-          </div>
-          <h3 className="text-3xl font-bold">Early Access</h3>
-          <p className="mt-4 text-background/60">We're currently in private beta, working with a handful of high-growth apps.</p>
-          <div className="mt-8 text-6xl font-bold tracking-tighter">$0</div>
-          <p className="text-sm opacity-50 uppercase tracking-widest mt-2">During Beta Phase</p>
-          <ul className="mt-10 space-y-4 text-left max-w-xs mx-auto">
-            <li className="flex items-center gap-3">
-              <Zap className="h-4 w-4" />
-              <span>Unlimited Campaigns</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <Zap className="h-4 w-4" />
-              <span>Full Analytics Suite</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <Zap className="h-4 w-4" />
-              <span>Enterprise Support</span>
-            </li>
-          </ul>
-          <a href="#contact" className="mt-12 block w-full rounded-xl bg-background py-4 text-sm font-bold text-foreground hover:bg-neutral-200 transition-colors">
-            Get Early Access
-          </a>
-        </motion.div>
+      <div className="mx-auto mt-16 max-w-6xl">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+          {tiers.map((tier, i) => (
+            <motion.div
+              key={tier.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className={`relative flex flex-col rounded-3xl p-8 sm:p-10 ${
+                tier.popular
+                  ? "border-2 border-foreground bg-card"
+                  : "border border-border bg-card"
+              }`}
+            >
+              {tier.popular && (
+                <div className="absolute top-6 right-6 inline-flex rounded-full bg-foreground px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-background">
+                  Most Popular
+                </div>
+              )}
+              <h3 className="text-3xl font-bold tracking-tight text-foreground">{tier.name}</h3>
+              <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed min-h-[40px]">
+                {tier.desc}
+              </p>
+              
+              <div className="mt-8">
+                {tier.price === "Custom" ? (
+                  <div className="flex flex-col justify-center min-h-[88px]">
+                    <div className="text-5xl font-bold tracking-tighter text-foreground mb-2">{tier.price}</div>
+                    <div className="text-sm text-neutral-500">{tier.priceSub}</div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col min-h-[88px]">
+                    <div className="text-sm font-medium text-neutral-500 mb-1">Starting at</div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-5xl font-bold tracking-tighter text-foreground">{tier.price}</span>
+                      <span className="text-neutral-500 font-medium">{tier.priceSub}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <button
+                className={`mt-8 w-full rounded-xl py-3.5 text-sm font-semibold transition-colors ${
+                  tier.actionType === "solid"
+                    ? "bg-foreground text-background hover:bg-neutral-800 dark:hover:bg-neutral-200"
+                    : "border border-border bg-background text-foreground hover:bg-secondary"
+                }`}
+              >
+                {tier.action}
+              </button>
+
+              <div className="mt-10 border-t border-border/50 pt-8 flex-1">
+                <div className="text-xs font-bold uppercase tracking-wider text-foreground mb-6">
+                  {tier.featuresLabel}
+                </div>
+                <ul className="space-y-4">
+                  {tier.features.map((f) => (
+                    <li key={f} className="flex items-start gap-3">
+                      <div className="mt-0.5 flex-shrink-0 text-foreground">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M13.3333 4L5.99999 11.3333L2.66666 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <span className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

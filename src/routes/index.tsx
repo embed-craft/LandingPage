@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, type Variants } from "framer-motion";
 import {
@@ -985,6 +986,57 @@ function Capabilities() {
 
 
 function Contact() {
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const baseUrl = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://localhost:4000")).replace(/\/$/, "");
+      const res = await fetch(`${baseUrl}/api/support/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: company.trim() ? `Company: ${company.trim()}\n\n${message.trim()}` : message.trim(),
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to send message");
+      }
+
+      toast.success("Request sent! We'll get back to you soon.");
+      setName("");
+      setCompany("");
+      setEmail("");
+      setMessage("");
+    } catch (error: any) {
+      console.error("Contact form error:", error);
+      toast.error(error.message || "Failed to send request. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="px-4 py-24">
       <div className="mx-auto max-w-6xl rounded-3xl border border-border bg-card p-8 sm:p-14">
@@ -1030,24 +1082,14 @@ function Contact() {
             </div>
           </div>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const fd = new FormData(e.currentTarget);
-              const subject = encodeURIComponent(`Demo request — ${fd.get("company") || fd.get("name")}`);
-              const body = encodeURIComponent(
-                `Name: ${fd.get("name")}\nCompany: ${fd.get("company")}\nEmail: ${fd.get("email")}\n\n${fd.get("message")}`,
-              );
-              window.location.href = `mailto:contactembedcraft@gmail.com?subject=${subject}&body=${body}`;
-            }}
-            className="rounded-2xl border border-border bg-background p-6 space-y-4"
-          >
+          <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-background p-6 space-y-4">
             <div className="grid sm:grid-cols-2 gap-3">
               <label className="block">
                 <span className="text-xs font-medium text-neutral-600">Name</span>
                 <input
                   required
-                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:border-foreground transition-colors"
                   placeholder="Jane Doe"
                 />
@@ -1055,7 +1097,8 @@ function Contact() {
               <label className="block">
                 <span className="text-xs font-medium text-neutral-600">Company</span>
                 <input
-                  name="company"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
                   className="mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:border-foreground transition-colors"
                   placeholder="Acme Inc."
                 />
@@ -1066,7 +1109,8 @@ function Contact() {
               <input
                 required
                 type="email"
-                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:border-foreground transition-colors"
                 placeholder="jane@acme.com"
               />
@@ -1074,7 +1118,9 @@ function Contact() {
             <label className="block">
               <span className="text-xs font-medium text-neutral-600">What are you building?</span>
               <textarea
-                name="message"
+                required
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 rows={4}
                 className="mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:border-foreground transition-colors resize-none"
                 placeholder="Tell us about your app and what you'd like to ship."
@@ -1082,12 +1128,13 @@ function Contact() {
             </label>
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background hover:bg-neutral-800 transition-colors"
+              disabled={submitting}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Send request <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
+              {submitting ? "Sending..." : "Send request"} <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
             </button>
             <p className="text-[11px] text-neutral-500 text-center">
-              Sends to contactembedcraft@gmail.com via your mail client.
+              Our team will get back to you within 24 hours.
             </p>
           </form>
         </div>

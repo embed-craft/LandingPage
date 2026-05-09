@@ -1,4 +1,5 @@
 import { Outlet, Link, createRootRoute } from "@tanstack/react-router";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -28,5 +29,10 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <Toaster position="top-center" />
+    </>
+  );
 }

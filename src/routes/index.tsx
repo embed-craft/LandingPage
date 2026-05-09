@@ -1008,7 +1008,10 @@ function Contact() {
 
     setSubmitting(true);
     try {
-      const baseUrl = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://localhost:4000")).replace(/\/$/, "");
+      const baseUrl = (
+        import.meta.env.VITE_API_URL || 
+        (import.meta.env.PROD ? "https://embed-backend-w9j0.onrender.com" : "http://localhost:4000")
+      ).replace(/\/$/, "");
       const res = await fetch(`${baseUrl}/api/support/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

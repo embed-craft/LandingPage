@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { createFileRoute } from "@tanstack/react-router";
-import { motion, type Variants } from "framer-motion";
+import { motion, type Variants, useScroll, useMotionValueEvent, useSpring } from "framer-motion";
 import {
   ArrowRight,
   Zap,
@@ -131,10 +131,25 @@ function Logo() {
 }
 
 function Navbar() {
+  const { scrollY } = useScroll();
+  const [scrolled, setScrolled] = useState(false);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrolled(latest > 50);
+  });
+
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4">
-      <nav className="mx-auto max-w-6xl">
-        <div className="flex items-center justify-between gap-4 rounded-2xl border-2 border-border bg-background/70 px-4 py-2.5 backdrop-blur-xl">
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 transition-all duration-300" style={{ paddingTop: scrolled ? '0.5rem' : '1rem' }}>
+      <motion.nav 
+        className={`mx-auto max-w-6xl transition-all duration-300 ${
+          scrolled ? "shadow-lg shadow-black/5" : ""
+        }`}
+      >
+        <div 
+          className={`flex items-center justify-between gap-4 rounded-2xl border-2 transition-colors duration-300 px-4 py-2.5 backdrop-blur-xl ${
+            scrolled ? "border-border/50 bg-background/85" : "border-border bg-background/70"
+          }`}
+        >
           <Logo />
           <div className="hidden md:flex items-center gap-1 rounded-full border border-border px-1.5 py-1.5">
             {[
@@ -172,7 +187,7 @@ function Navbar() {
             </a>
           </div>
         </div>
-      </nav>
+      </motion.nav>
     </header>
   );
 }
@@ -1340,22 +1355,41 @@ function Pricing() {
   );
 }
 
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  return (
+    <motion.div
+      className="fixed top-0 left-0 right-0 h-1 bg-foreground origin-left z-[60]"
+      style={{ scaleX }}
+    />
+  );
+}
+
 function Landing() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pb-12">
+      <ScrollProgress />
       <Navbar />
-      <Hero />
-      <Bento />
-      <PlatformDeepDive />
-      <Showcase />
-      <UseCases />
-      <TechEdge />
-      <Capabilities />
-      <Pricing />
-      <TrustStats />
-      <DevExperience />
-      <Contact />
-      <FinalCTA />
+      <div className="pt-20">
+        <Hero />
+        <Bento />
+        <PlatformDeepDive />
+        <Showcase />
+        <UseCases />
+        <TechEdge />
+        <Capabilities />
+        <Pricing />
+        <TrustStats />
+        <DevExperience />
+        <Contact />
+        <FinalCTA />
+      </div>
       <Footer />
     </main>
   );

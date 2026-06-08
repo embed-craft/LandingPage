@@ -27,24 +27,24 @@ export function InteractivePhoneMockup({ scrollPercentage }: PhoneMockupProps) {
   let stage = 1;
   let stageProgress = 0; // progress within the current stage
 
-  if (scrollPercentage < 0.30) {
+  if (scrollPercentage < 0.20) {
     stage = 1;
-    stageProgress = Math.max(0, (scrollPercentage - 0.12) / 0.18);
-  } else if (scrollPercentage < 0.50) {
+    stageProgress = Math.max(0, Math.min(1, (scrollPercentage - 0.04) / 0.16));
+  } else if (scrollPercentage < 0.36) {
     stage = 2;
-    stageProgress = (scrollPercentage - 0.30) / 0.20;
-  } else if (scrollPercentage < 0.68) {
+    stageProgress = Math.min(1, (scrollPercentage - 0.20) / 0.16);
+  } else if (scrollPercentage < 0.52) {
     stage = 3;
-    stageProgress = (scrollPercentage - 0.50) / 0.18;
-  } else if (scrollPercentage < 0.82) {
+    stageProgress = Math.min(1, (scrollPercentage - 0.36) / 0.16);
+  } else if (scrollPercentage < 0.68) {
     stage = 4;
-    stageProgress = (scrollPercentage - 0.68) / 0.14;
-  } else if (scrollPercentage < 0.92) {
+    stageProgress = Math.min(1, (scrollPercentage - 0.52) / 0.16);
+  } else if (scrollPercentage < 0.84) {
     stage = 5;
-    stageProgress = (scrollPercentage - 0.82) / 0.10;
+    stageProgress = Math.min(1, (scrollPercentage - 0.68) / 0.16);
   } else {
     stage = 6;
-    stageProgress = (scrollPercentage - 0.92) / 0.08;
+    stageProgress = Math.min(1, (scrollPercentage - 0.84) / 0.16);
   }
 
   // State to track wheel spin completion in Stage 5 (Spin the Wheel)
@@ -292,77 +292,139 @@ export function InteractivePhoneMockup({ scrollPercentage }: PhoneMockupProps) {
           <AnimatePresence>
             {stage === 4 && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-background/95 backdrop-blur-sm z-20 p-5 flex flex-col items-center justify-center text-center animate-fade-in"
+                className="absolute inset-0 bg-black/45 backdrop-blur-[2px] z-20 p-4 flex flex-col items-center justify-center text-center animate-fade-in"
               >
-                <div className="border border-foreground bg-card text-card-foreground p-5 rounded-2xl w-full relative shadow-xl overflow-hidden">
-                  <span className="text-[9px] font-bold tracking-widest text-neutral-400 bg-secondary px-2.5 py-0.75 rounded-full uppercase">
-                    Reward Nudge
-                  </span>
-                  <h4 className="text-sm font-bold mt-3">Scratch & Win!</h4>
-                  <p className="text-[10px] text-muted-foreground mt-1 mb-4">
-                    Scratch the card below to reveal your secret offer.
-                  </p>
+                {/* Premium Ticket Card - Completely self-contained */}
+                <div className="w-full max-w-[275px] bg-card text-card-foreground border-2 border-foreground rounded-2xl relative shadow-2xl overflow-hidden p-5 flex flex-col justify-between my-2 bg-background">
+                  {/* Left and Right circular cutouts for coupon aesthetic */}
+                  <div className="w-4 h-8 rounded-r-full bg-background border-r-2 border-foreground absolute left-[-2px] top-1/2 -translate-y-1/2 z-10" />
+                  <div className="w-4 h-8 rounded-l-full bg-background border-l-2 border-foreground absolute right-[-2px] top-1/2 -translate-y-1/2 z-10" />
 
-                  {/* Scratchable Card Container */}
-                  <div className="w-full h-24 border border-dashed border-neutral-300 rounded-xl relative overflow-hidden flex items-center justify-center bg-secondary/10">
+                  {/* Coupon Header inside the Card */}
+                  <div className="pb-3 border-b border-dashed border-foreground/20 flex flex-col items-center select-none">
+                    <span className="text-[8px] font-black tracking-widest text-neutral-400 bg-secondary px-2.5 py-0.75 rounded-full uppercase border border-border">
+                      EXCLUSIVE GIFT
+                    </span>
+                    <h4 className="text-xs font-extrabold tracking-tight mt-2 text-foreground">SCRATCH & WIN</h4>
+                    <p className="text-[9px] text-muted-foreground max-w-[190px] mt-0.5 leading-normal">
+                      Scratch with a coin to reveal your secret offer!
+                    </p>
+                  </div>
+                  
+                  {/* Tall Scratch Container */}
+                  <div className="w-full h-36 border border-dashed border-foreground/35 rounded-xl relative overflow-hidden flex items-center justify-center bg-secondary/15 mt-3 select-none">
                     
-                    {/* Underlying Revealed Offer */}
-                    <div className="text-center p-3">
-                      <div className="text-[9px] uppercase text-neutral-400">YOUR WINNING OFFER</div>
-                      <div className="text-base font-extrabold tracking-wide text-foreground mt-1">
+                    {/* Underlying Revealed Offer (Coupon layout) */}
+                    <div className="text-center p-3 flex flex-col items-center justify-center">
+                      <div className="text-[9px] uppercase tracking-wider text-neutral-400 font-extrabold">YOUR MYSTERY REWARD</div>
+                      <div className="text-xl font-black tracking-tight text-foreground mt-1 leading-none">
                         70% DISCOUNT
                       </div>
-                      <div className="text-[9px] font-mono tracking-widest text-neutral-500 mt-0.5">
+                      <div className="text-[9px] font-mono tracking-widest text-foreground font-bold mt-1 px-3 py-0.5 border border-dashed border-foreground/30 bg-background/50 rounded">
                         CODE: NINJA70
+                      </div>
+                      {/* Barcode */}
+                      <div className="flex justify-center items-center gap-[2.5px] mt-2.5 opacity-70">
+                        {[1, 3, 1, 2, 4, 1, 2, 3, 1, 4, 2, 1, 3, 2, 1].map((w, idx) => (
+                          <div key={idx} className="h-4 bg-foreground" style={{ width: `${w}px` }} />
+                        ))}
                       </div>
                     </div>
 
-                    {/* Scratch overlay layer that scratches and reveals */}
+                    {/* Scratch cover overlay layer */}
                     <motion.div
-                      initial={{ opacity: 1 }}
-                      animate={{ opacity: 0 }}
-                      transition={{ delay: 1.5, duration: 0.8 }}
-                      className="absolute inset-0 bg-neutral-300 dark:bg-neutral-700 flex flex-col items-center justify-center text-[10px] font-bold text-neutral-600 dark:text-neutral-300 select-none pointer-events-none"
+                      initial={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                      animate={{ opacity: 0, scale: 0.96, filter: "blur(6px)" }}
+                      transition={{ delay: 1.8, duration: 0.6, ease: "easeOut" }}
+                      className="absolute inset-0 bg-neutral-250 dark:bg-neutral-800 flex flex-col items-center justify-center pointer-events-none"
                     >
+                      {/* Textured matte background pattern */}
+                      <div className="absolute inset-1 border border-foreground/10 rounded-lg flex flex-col items-center justify-center bg-gradient-to-tr from-neutral-200 to-neutral-300 dark:from-neutral-800 dark:to-neutral-900 shadow-inner">
+                        <span className="text-[8px] font-black tracking-widest text-foreground/50 uppercase">★ SCRATCH CARD ★</span>
+                        <div className="w-8 h-8 rounded-full border border-foreground/10 flex items-center justify-center mt-1.5 opacity-30 animate-pulse">
+                          <Sparkles className="h-3.5 w-3.5" />
+                        </div>
+                      </div>
+
                       {/* Scratch scribble drawing path */}
                       <motion.svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100">
                         <motion.path
-                          d="M10,30 C30,70 50,20 70,80 T90,30"
+                          d="M 10,25 C 25,65 30,20 45,75 T 75,25 S 85,80 90,40"
                           fill="transparent"
                           stroke="currentColor"
-                          strokeWidth="10"
+                          strokeWidth="14"
                           strokeLinecap="round"
                           initial={{ pathLength: 0 }}
                           animate={{ pathLength: 1 }}
-                          transition={{ duration: 1.2, ease: "easeInOut" }}
-                          className="text-neutral-400 dark:text-neutral-500"
+                          transition={{ duration: 1.3, ease: "easeInOut", delay: 0.2 }}
+                          className="text-neutral-400 dark:text-neutral-600"
                         />
                       </motion.svg>
-                      
-                      <motion.div 
-                        animate={{ scale: [1, 0.92, 1], rotate: [0, -2, 2, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.2 }}
-                        className="z-10 flex items-center gap-1.5"
+
+                      {/* Floating Scratch Sparkles */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 1, 0] }}
+                        transition={{ duration: 1.3, delay: 0.2 }}
+                        className="absolute inset-0 pointer-events-none"
                       >
-                        <span>🖐️ Scratching...</span>
+                        {[...Array(15)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ x: 0, y: 0, scale: 0 }}
+                            animate={{ 
+                              x: (Math.random() - 0.5) * 160, 
+                              y: (Math.random() - 0.5) * 85,
+                              scale: [0, 1.3, 0] 
+                            }}
+                            transition={{ duration: 1, ease: "easeOut", delay: 0.3 + Math.random() * 0.4 }}
+                            className="absolute left-1/2 top-1/2 w-1.5 h-1.5 bg-foreground rounded-full"
+                          />
+                        ))}
+                      </motion.div>
+                      
+                      {/* Scratching Coin (Black and White Theme) */}
+                      <motion.div 
+                        animate={{ 
+                          x: [-60, 60, -40, 40, -20, 20, 0],
+                          y: [-15, 15, -10, 10, -5, 5, 0],
+                          rotate: [0, 360, 720, 1080] 
+                        }}
+                        transition={{ duration: 1.4, delay: 0.1, ease: "easeInOut" }}
+                        className="z-10 absolute flex items-center justify-center"
+                      >
+                        {/* Elegant Silver/Monochrome Coin */}
+                        <div className="h-8 w-8 rounded-full border-2 border-foreground bg-background flex items-center justify-center relative shadow-md">
+                          {/* Inner dotted frame on coin */}
+                          <div className="absolute inset-[1.5px] rounded-full border border-dashed border-foreground/30 flex items-center justify-center font-black text-[9px] text-foreground select-none">
+                            ¢
+                          </div>
+                        </div>
                       </motion.div>
                     </motion.div>
 
                   </div>
+                </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={stageProgress > 0.6 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                    transition={{ delay: 1.8 }}
-                    className="mt-4"
-                  >
-                    <button className="w-full bg-foreground text-background font-semibold text-xs py-2 rounded-lg hover:bg-foreground/90 transition-colors">
-                      Claim Reward
-                    </button>
-                  </motion.div>
+                {/* Claim Button */}
+                <div className="pb-4 min-h-[50px] flex items-center justify-center w-full px-4">
+                  <AnimatePresence>
+                    {stageProgress > 0.6 && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.3, y: 15 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ type: "spring", stiffness: 350, damping: 15 }}
+                        className="w-full"
+                      >
+                        <button className="w-full bg-foreground text-background font-bold text-xs py-2.5 rounded-xl hover:bg-foreground/90 transition-colors shadow-lg">
+                          Claim 70% Discount
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </motion.div>
             )}
@@ -377,60 +439,165 @@ export function InteractivePhoneMockup({ scrollPercentage }: PhoneMockupProps) {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-background/95 backdrop-blur-sm z-20 p-4 flex flex-col items-center justify-center text-center"
+                className="absolute inset-0 bg-background/98 backdrop-blur-md z-20 py-4 px-1 flex flex-col items-center justify-between text-center"
               >
-                <Gift className="h-6 w-6 mb-1 text-foreground" />
-                <h4 className="text-xs font-bold">Spin and Win</h4>
-                <p className="text-[9px] text-muted-foreground max-w-[150px] mt-0.5 mb-4 leading-normal">
-                  Try your luck to win coupons & exclusive rewards.
-                </p>
+                {/* Header */}
+                <div className="pt-2 select-none">
+                  <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-foreground text-background mb-1 shadow-md">
+                    <Gift className="h-4 w-4" />
+                  </div>
+                  <h4 className="text-xs font-extrabold tracking-tight">SPIN THE WHEEL</h4>
+                  <p className="text-[9px] text-muted-foreground max-w-[170px] mt-0.5 leading-normal">
+                    Try your luck and claim your exclusive in-app reward!
+                  </p>
+                </div>
 
-                {/* The Wheel Container */}
-                <div className="relative w-36 h-36 flex items-center justify-center my-2">
-                  {/* Pin / Indicator */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[10px] border-t-foreground z-30" />
+                {/* Large Wheel Container */}
+                <div className="relative w-[265px] h-[265px] flex items-center justify-center my-1">
+                  {/* Pin / Indicator with ticking animation */}
+                  <motion.div
+                    animate={stage === 5 ? {
+                      rotate: [0, -20, 15, -20, 15, -12, 10, -8, 6, -4, 2, 0],
+                      y: [0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+                    } : { rotate: 0, y: 0 }}
+                    transition={{
+                      duration: 3,
+                      ease: [0.15, 0.85, 0.35, 1]
+                    }}
+                    style={{ originX: 0.5, originY: 0 }}
+                    className="absolute top-[-6px] left-1/2 -translate-x-1/2 z-30 flex flex-col items-center"
+                  >
+                    {/* The pointer triangle */}
+                    <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[16px] border-t-foreground drop-shadow-xl" />
+                    {/* Hinge rivet */}
+                    <div className="w-3.5 h-3.5 rounded-full bg-background border-2 border-foreground -mt-2 flex items-center justify-center shadow-sm">
+                      <div className="w-2 h-2 rounded-full bg-foreground" />
+                    </div>
+                  </motion.div>
                   
                   {/* Rotating Wheel */}
                   <motion.div
                     animate={{ rotate: wheelRotation }}
                     transition={{ duration: 3, ease: [0.15, 0.85, 0.35, 1] }}
-                    className="w-full h-full rounded-full border-[3px] border-foreground relative overflow-hidden bg-background shadow-md shadow-foreground/5"
+                    className="w-full h-full rounded-full border-[4px] border-foreground relative overflow-hidden bg-background shadow-2xl shadow-foreground/15"
                   >
-                    {/* Slices representation using simple SVG */}
+                    {/* Premium segmented design */}
                     <svg viewBox="0 0 100 100" className="w-full h-full">
-                      {/* Slices lines */}
-                      <line x1="50" y1="0" x2="50" y2="100" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="15" y1="15" x2="85" y2="85" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="85" y1="15" x2="15" y2="85" stroke="currentColor" strokeWidth="1.5" />
+                      {/* Alternating Sectors */}
+                      <path d="M 50 50 L 98 50 A 48 48 0 0 1 83.94 83.94 Z" className="fill-foreground stroke-background/20" strokeWidth="0.5" />
+                      <path d="M 50 50 L 83.94 83.94 A 48 48 0 0 1 50 98 Z" className="fill-background stroke-foreground/10" strokeWidth="0.5" />
+                      <path d="M 50 50 L 50 98 A 48 48 0 0 1 16.06 83.94 Z" className="fill-foreground stroke-background/20" strokeWidth="0.5" />
+                      <path d="M 50 50 L 16.06 83.94 A 48 48 0 0 1 2 50 Z" className="fill-background stroke-foreground/10" strokeWidth="0.5" />
+                      <path d="M 50 50 L 2 50 A 48 48 0 0 1 16.06 16.06 Z" className="fill-foreground stroke-background/20" strokeWidth="0.5" />
+                      <path d="M 50 50 L 16.06 16.06 A 48 48 0 0 1 50 2 Z" className="fill-background stroke-foreground/10" strokeWidth="0.5" />
+                      <path d="M 50 50 L 50 2 A 48 48 0 0 1 83.94 16.06 Z" className="fill-foreground stroke-background/20" strokeWidth="0.5" />
+                      <path d="M 50 50 L 83.94 16.06 A 48 48 0 0 1 98 50 Z" className="fill-background stroke-foreground/10" strokeWidth="0.5" />
                       
-                      {/* Slices text values (abbreviated) */}
-                      <text x="50" y="20" textAnchor="middle" fontSize="6" fontWeight="bold" fill="currentColor" transform="rotate(22.5 50 50)">10%</text>
-                      <text x="50" y="20" textAnchor="middle" fontSize="6" fontWeight="bold" fill="currentColor" transform="rotate(67.5 50 50)">Free</text>
-                      <text x="50" y="20" textAnchor="middle" fontSize="6" fontWeight="bold" fill="currentColor" transform="rotate(112.5 50 50)">Try Again</text>
-                      <text x="50" y="20" textAnchor="middle" fontSize="6" fontWeight="bold" fill="currentColor" transform="rotate(157.5 50 50)">50% OFF</text>
-                      <text x="50" y="20" textAnchor="middle" fontSize="6" fontWeight="bold" fill="currentColor" transform="rotate(202.5 50 50)">20%</text>
-                      <text x="50" y="20" textAnchor="middle" fontSize="6" fontWeight="bold" fill="currentColor" transform="rotate(247.5 50 50)">Gift</text>
-                      <text x="50" y="20" textAnchor="middle" fontSize="6" fontWeight="bold" fill="currentColor" transform="rotate(292.5 50 50)">15%</text>
-                      <text x="50" y="20" textAnchor="middle" fontSize="6" fontWeight="bold" fill="currentColor" transform="rotate(337.5 50 50)">Thanks</text>
+                      {/* Outer LED peg ring - 48 peg dots */}
+                      <circle cx="50" cy="50" r="45.5" fill="none" className="stroke-foreground" strokeWidth="2" strokeDasharray="0.1, 5.85" strokeLinecap="round" />
+                      
+                      {/* Slices text values (rotated radially) */}
+                      <text x="50" y="16" textAnchor="middle" fontSize="4.5" fontWeight="900" className="fill-background font-sans tracking-wide" transform="rotate(22.5 50 50)">10%</text>
+                      <text x="50" y="16" textAnchor="middle" fontSize="4.5" fontWeight="900" className="fill-foreground font-sans tracking-wide" transform="rotate(67.5 50 50)">FREE</text>
+                      <text x="50" y="16" textAnchor="middle" fontSize="4.5" fontWeight="900" className="fill-background font-sans tracking-wide" transform="rotate(112.5 50 50)">RESET</text>
+                      <text x="50" y="16" textAnchor="middle" fontSize="4.5" fontWeight="900" className="fill-foreground font-sans tracking-wide" transform="rotate(157.5 50 50)">50% OFF</text>
+                      <text x="50" y="16" textAnchor="middle" fontSize="4.5" fontWeight="900" className="fill-background font-sans tracking-wide" transform="rotate(202.5 50 50)">20%</text>
+                      <text x="50" y="16" textAnchor="middle" fontSize="4.5" fontWeight="900" className="fill-foreground font-sans tracking-wide" transform="rotate(247.5 50 50)">GIFT</text>
+                      <text x="50" y="16" textAnchor="middle" fontSize="4.5" fontWeight="900" className="fill-background font-sans tracking-wide" transform="rotate(292.5 50 50)">15%</text>
+                      <text x="50" y="16" textAnchor="middle" fontSize="4.5" fontWeight="900" className="fill-foreground font-sans tracking-wide" transform="rotate(337.5 50 50)">SPIN</text>
                     </svg>
 
                     {/* Central pin */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-foreground border-2 border-background flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-background" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-foreground border-[3px] border-background flex items-center justify-center shadow-lg">
+                      <div className="w-2.5 h-2.5 rounded-full bg-background" />
                     </div>
                   </motion.div>
                 </div>
 
-                {/* Prize notification */}
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={stageProgress > 0.6 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                  transition={{ delay: 1.5 }}
-                  className="mt-3 text-xs font-bold"
-                >
-                  🎉 Won: 50% OFF!
-                </motion.div>
+                {/* Large Confetti Celebration */}
+                {stageProgress > 0.6 && (
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden z-30">
+                    {[...Array(50)].map((_, i) => {
+                      const angle = Math.random() * 360;
+                      const distance = 40 + Math.random() * 120;
+                      const x = Math.cos((angle * Math.PI) / 180) * distance;
+                      const y = Math.sin((angle * Math.PI) / 180) * distance - 10;
+                      const size = 3 + Math.random() * 4;
+                      const isCircle = i % 2 === 0;
+                      
+                      return (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 1, scale: 0, x: 0, y: 40 }}
+                          animate={{ 
+                            opacity: [1, 1, 0],
+                            scale: [0, 1.4, 1, 0],
+                            x: x,
+                            y: [40, y, y + 120],
+                            rotate: [0, angle * (i % 2 === 0 ? 3 : -3)]
+                          }}
+                          transition={{ 
+                            duration: 2.5, 
+                            delay: 2.4 + Math.random() * 0.6,
+                            ease: "easeOut"
+                          }}
+                          className={`absolute left-1/2 top-1/2 ${
+                            isCircle ? "rounded-full" : "rounded-sm"
+                          } ${
+                            i % 4 === 0 
+                              ? "bg-foreground" 
+                              : i % 4 === 1 
+                              ? "bg-neutral-400" 
+                              : i % 4 === 2 
+                              ? "bg-neutral-300" 
+                              : "bg-neutral-600"
+                          }`}
+                          style={{
+                            width: size,
+                            height: size,
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Prize notification overlay and button */}
+                <div className="pb-4 min-h-[80px] flex flex-col items-center justify-center">
+                  <AnimatePresence>
+                    {stageProgress > 0.6 ? (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.2, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ type: "spring", stiffness: 350, damping: 15, delay: 2.6 }}
+                        className="flex flex-col items-center gap-2"
+                      >
+                        <motion.div
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                          className="bg-foreground text-background font-black text-xs px-6 py-2.5 rounded-xl shadow-2xl border border-background/20 z-20 flex items-center gap-2 select-none"
+                        >
+                          <Sparkles className="h-4 w-4 animate-spin text-neutral-200" style={{ animationDuration: '3s' }} />
+                          <span className="tracking-wider">CONGRATULATIONS!</span>
+                        </motion.div>
+                        <div className="text-[13px] font-extrabold tracking-tight mt-1 text-foreground">
+                          50% OFF UNLOCKED!
+                        </div>
+                        <span className="text-[9px] text-muted-foreground font-mono tracking-widest bg-secondary px-2 py-0.5 rounded border border-border">
+                          CODE: CRAFT50
+                        </span>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-[10px] font-semibold text-neutral-400 select-none animate-pulse"
+                      >
+                        Spinning...
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

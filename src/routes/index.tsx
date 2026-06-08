@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, type Variants, useScroll, useMotionValueEvent, useSpring } from "framer-motion";
+import { InteractivePhoneMockup } from "@/components/InteractivePhoneMockup";
 import {
   ArrowRight,
   Zap,
@@ -334,8 +335,6 @@ function DashboardMockup() {
   );
 }
 
-
-
 function SectionHeader({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
   return (
     <motion.div
@@ -541,21 +540,21 @@ function DevExperience() {
             <motion.div variants={fadeUp} className="text-xs uppercase tracking-[0.2em] text-neutral-500 font-medium">
               Developer Experience
             </motion.div>
-            <motion.h2 variants={fadeUp} className="mt-3 text-4xl sm:text-5xl font-semibold tracking-tighter">
+            <h2 className="mt-3 text-4xl sm:text-5xl font-semibold tracking-tighter">
               Built by developers.<br />Integrate in 3 lines.
-            </motion.h2>
-            <motion.p variants={fadeUp} className="mt-4 text-neutral-400 max-w-md">
+            </h2>
+            <p className="mt-4 text-neutral-400 max-w-md">
               First-class Flutter support. Type-safe APIs. Zero configuration. Ship your
               integration before standup.
-            </motion.p>
-            <motion.div variants={fadeUp} className="mt-8 flex gap-3">
+            </p>
+            <div className="mt-8 flex gap-3">
               <a href="https://docs.embedcraft.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 hover:bg-neutral-200 transition-colors">
                 View Docs <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
               </a>
               <a href="https://pub.dev" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-neutral-700 px-5 py-2.5 text-sm font-medium text-neutral-200 hover:bg-neutral-900 transition-colors">
                 pub.dev
               </a>
-            </motion.div>
+            </div>
           </motion.div>
 
           <motion.div
@@ -998,8 +997,6 @@ function Capabilities() {
   );
 }
 
-
-
 function Contact() {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
@@ -1372,24 +1369,55 @@ function ScrollProgress() {
 }
 
 function Landing() {
+  const { scrollYProgress } = useScroll();
+  const [scrollPercentage, setScrollPercentage] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    setScrollPercentage(latest);
+  });
+
   return (
-    <main className="min-h-screen bg-background pb-12">
+    <main className="min-h-screen bg-background pb-12 relative overflow-x-clip" style={{ zoom: 0.8 }}>
       <ScrollProgress />
       <Navbar />
-      <div className="pt-20">
+      {/* Centered Hero section (first page) which spans the full page width and doesn't reserve space for the phone */}
+      <div className="mx-auto max-w-[1680px] pt-20 px-4 sm:px-6 lg:px-12 xl:px-20">
         <Hero />
-        <Bento />
-        <PlatformDeepDive />
-        <Showcase />
-        <UseCases />
-        <TechEdge />
-        <Capabilities />
-        <Pricing />
-        <TrustStats />
-        <DevExperience />
-        <Contact />
-        <FinalCTA />
       </div>
+
+      {/* Grid container spanning the full width for the rest of the sections (second page and onwards) */}
+      <div className="mx-auto max-w-[1680px] px-4 sm:px-6 lg:px-12 xl:px-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-14 relative">
+          {/* Main content column on the left/center, leaving space for the phone mockup on the right */}
+          <div className="col-span-1 lg:col-span-9 flex flex-col transition-all duration-300">
+            <Bento />
+            <PlatformDeepDive />
+            <Showcase />
+            <UseCases />
+            <TechEdge />
+            <Capabilities />
+            <Pricing />
+            <TrustStats />
+            <DevExperience />
+            <Contact />
+            <FinalCTA />
+          </div>
+        </div>
+      </div>
+
+      {/* Fixed Phone Mockup aligned to the extreme right of the viewport, shifted down to clear the navbar */}
+      {/* It animates in (fade + slide from right) once the user scrolls down to the second page (Bento section) */}
+      <motion.div
+        initial={{ opacity: 0, x: 80 }}
+        animate={scrollPercentage >= 0.04 ? { opacity: 1, x: 0 } : { opacity: 0, x: 80 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        className="hidden lg:block fixed top-40 right-20 xl:right-[7.5rem] w-[300px] xl:w-[325px] z-40 pointer-events-none"
+      >
+        <div className="pointer-events-auto">
+          <InteractivePhoneMockup scrollPercentage={scrollPercentage} />
+        </div>
+      </motion.div>
+      
       <Footer />
     </main>
   );
